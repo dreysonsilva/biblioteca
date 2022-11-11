@@ -4,18 +4,21 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-@Entity // a classe livro agora é uma entidade
+@Entity // A classe livro agora é uma entidade
 @Table (name = "LIVRO") // nome da tabela
 @DynamicUpdate
 public class Livro {
@@ -27,7 +30,8 @@ public class Livro {
 	private int id;
 	
 	@Column (name = "AUTOR", nullable = false) //Nome da Coluna e dizer tb que a coluna não recebe nulos
-	private String autor;
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Autor.class)
+	private Autor autor;
 	
 	@Column (name = "TITULO", nullable = false) //Nome da Coluna e dizer tb que a coluna não recebe nulo
 	private String titulo;
@@ -35,11 +39,12 @@ public class Livro {
 	@Temporal (TemporalType.DATE) //Anotações do Hibernet para tratar data, somente a data
 	@Column (name = "DATA_PUBLICACAO", nullable = false) //Nome da Coluna e dizer tb que a coluna pode receber nulo
 	private Calendar dataPublicacao;
+
 	
 	public Livro() {
 	}
 
-	public Livro(String autor, String titulo, Calendar dataPublicacao) {
+	public Livro(Autor autor, String titulo, Calendar dataPublicacao) {
 		this.autor = autor;
 		this.titulo = titulo;
 		this.dataPublicacao = dataPublicacao;
@@ -54,11 +59,11 @@ public class Livro {
 		this.id = id;
 	}
 
-	public String getAutor() {
+	public Autor getAutor() {
 		return autor;
 	}
 
-	public void setAutor(String autor) {
+	public void setAutor(Autor autor) {
 		this.autor = autor;
 	}
 
